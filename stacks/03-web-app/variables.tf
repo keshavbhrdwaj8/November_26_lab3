@@ -12,6 +12,11 @@ variable "tags" {
     type = map(string) 
     default = { environment = "lab2", workload = "web-app" }
     }
+    
+variable "service_plan_id" {
+  description = "App Service Plan resource ID from Stage 2"
+  type        = string
+}
 variable "web_app_name" { 
     default = "keshavlab2-web"
     type = string 
