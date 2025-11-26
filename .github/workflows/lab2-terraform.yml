@@ -32,25 +32,28 @@ jobs:
         with:
           terraform_version: 1.7.5
 
-      - name: Azure Login (OIDC)
+      # Using a JSON service principal via AZURE_CREDENTIALS is fine.
+      # (Alternatively you can switch to OIDC later.)
+      - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: ./November_26_lab3/01-key-vault_storage-account
+        working-directory: ./stacks/01-key-vault_storage-account
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./November_26_lab3/01-key-vault_storage-account
+        working-directory: ./stacks/01-key-vault_storage-account
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ./November_26_lab3/01-key-vault_storage-account
+        working-directory: ./stacks/01-key-vault_storage-account
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: ./November_26_lab3/01-key-vault_storage-account
+        working-directory: ./stacks/01-key-vault_storage-account
 
   stage02_app_plan:
     name: Stage 2 – App Service Plan
@@ -65,26 +68,26 @@ jobs:
         with:
           terraform_version: 1.7.5
 
-      - name: Azure Login (OIDC)
+      - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: ./November_26_lab3/stacks/02-app-plan
+        working-directory: ./stacks/02-app-plan
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./November_26_lab3/stacks/02-app-plan
+        working-directory: ./stacks/02-app-plan
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ./November_26_lab3/stacks/02-app-plan
+        working-directory: ./stacks/02-app-plan
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: ./November_26_lab3/stacks/02-app-plan
+        working-directory: ./stacks/02-app-plan
 
   stage03_web_app:
     name: Stage 3 – Web App
@@ -99,23 +102,23 @@ jobs:
         with:
           terraform_version: 1.7.5
 
-      - name: Azure Login (OIDC)
+      - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: ./November_26_lab3/stacks/03-web-app
+        working-directory: ./stacks/03-web-app
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./November_26_lab3/stacks/03-web-app
+        working-directory: ./stacks/03-web-app
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ./November_26_lab3/stacks/03-web-app
+        working-directory: ./stacks/03-web-app
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: ./November_26_lab3/stacks/03-web-app
+        working-directory: ./stacks/03-web-app
