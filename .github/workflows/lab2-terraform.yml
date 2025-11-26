@@ -38,19 +38,19 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: ./November_26_lab3/stacks/01-foundation
+        working-directory: ./November_26_lab3/01-key-vault_storage-account
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./November_26_lab3/stacks/01-foundation
+        working-directory: ./November_26_lab3/01-key-vault_storage-account
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ./November_26_lab3/stacks/01-foundation
+        working-directory: ./November_26_lab3/01-key-vault_storage-account
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: ./November_26_lab3/stacks/01-foundation
+        working-directory: ./November_26_lab3/01-key-vault_storage-account
 
   stage02_app_plan:
     name: Stage 2 – App Service Plan

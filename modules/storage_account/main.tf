@@ -6,7 +6,6 @@ resource "azurerm_storage_account" "this" {
   account_tier                 = "Standard"
   account_replication_type     = "LRS"
   public_network_access_enabled = false
-  allow_blob_public_access      = false
   min_tls_version               = "TLS1_2"
 
   network_rules {
