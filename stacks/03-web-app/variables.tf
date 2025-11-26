@@ -21,3 +21,9 @@ variable "web_app_name" {
     default = "keshavlab2-web"
     type = string 
     }
+
+
+variable "app_service_plan_name" {
+  description = "Name of the App Service Plan created in Stage 2 (same RG)"
+  type        = string
+}
