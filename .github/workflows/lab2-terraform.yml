@@ -1,0 +1,121 @@
+
+name: Lab 2 – Multi-stage Terraform Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  # Common TF vars (override in Actions → Variables)
+  TF_VAR_resource_group_name: Keshav_Bhardwaj_RG
+  TF_VAR_location: eastus
+  TF_VAR_storage_account_name: keshavlab2storage
+  TF_VAR_key_vault_name: keshavlab2-kv
+  TF_VAR_app_service_plan_name: keshavlab2-asp
+  TF_VAR_web_app_name: keshavlab2-web
+
+jobs:
+  stage01_foundation:
+    name: Stage 1 – Storage + Key Vault
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./November_26_lab3/stacks/01-foundation
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./November_26_lab3/stacks/01-foundation
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: ./November_26_lab3/stacks/01-foundation
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: ./November_26_lab3/stacks/01-foundation
+
+  stage02_app_plan:
+    name: Stage 2 – App Service Plan
+    runs-on: ubuntu-latest
+    needs: stage01_foundation
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./November_26_lab3/stacks/02-app-plan
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./November_26_lab3/stacks/02-app-plan
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: ./November_26_lab3/stacks/02-app-plan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: ./November_26_lab3/stacks/02-app-plan
+
+  stage03_web_app:
+    name: Stage 3 – Web App
+    runs-on: ubuntu-latest
+    needs: stage02_app_plan
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./November_26_lab3/stacks/03-web-app
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./November_26_lab3/stacks/03-web-app
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: ./November_26_lab3/stacks/03-web-app
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: ./November_26_lab3/stacks/03-web-app
