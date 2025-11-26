@@ -3,8 +3,8 @@
 data "terraform_remote_state" "app_plan" {
   backend = "azurerm"
   config = {
-    resource_group_name  = "<tfstate-rg>"
-    storage_account_name = "<tfstate-sa>"
+    resource_group_name  = "Keshav_Bhardwaj_RG"
+    storage_account_name = "keshavlab2storage"
     container_name       = "tfstate"
     key                  = "lab2/02-app-plan.tfstate"
   }
